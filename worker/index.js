@@ -1,5 +1,5 @@
 var amqp = require('amqplib/callback_api');
-var phantomjs = require('phantomjs-prebuilt')
+var phantomjs = require('phantomjs')
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var myBucket = 'gianarb.wikidiff.output';
@@ -24,19 +24,19 @@ amqp.connect('amqp://rabbit', function(err, conn) {
 				path.join(__dirname, './phantomjs-script.js'),
 				data.link
 			], null, function (err, stdout, stderr) {
-				console.log("execFileSTDOUT:", JSON.stringify(stdout))
-				console.log("execFileSTDERR:", JSON.stringify(stderr))
+        var buf = Buffer.from(stdout, 'base64');
+        s3.putObject({
+          Bucket: myBucket,
+          Key: "non.png",
+          ContentType: "image/png",
+          Body: buf
+        }, function(err, data) { if (stdout) {
+            console.log("err s3 %s", err)
+          } else {
+            console.log("Successfully uploaded data to myBucket/myKey");
+          }
+        });
 			})
-
-
-
-				//s3.putObject({Bucket: myBucket, Key: "/non.png", Body: stdout}, function(err, data) { if (stdout) {
-						//console.log(err)
-					//} else {
-						//console.log("Successfully uploaded data to myBucket/myKey");
-					//}
-				//});
-
     }, {noAck: true});
   });
 });

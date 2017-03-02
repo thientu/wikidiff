@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "phantomjs-prebuilt": "*",
+    "phantomjs": "1.9.15",
     "amqplib": "*",
     "aws-sdk": "*"
   }
