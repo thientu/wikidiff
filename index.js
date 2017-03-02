@@ -1,8 +1,11 @@
 var amqp = require('amqplib/callback_api');
+var phantomjs = require('phantomjs-prebuilt')
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var myBucket = 'gianarb.wikidiff.output';
-var phantom = require('phantom');
+var path = require('path')
+
+var execFile = require("child_process").execFile
 
 amqp.connect('amqp://rabbit', function(err, conn) {
   if (err) {
@@ -16,26 +19,23 @@ amqp.connect('amqp://rabbit', function(err, conn) {
       var content = msg.content.toString();
       console.log("Received %s", content);
       var data = JSON.parse(content);
-      phantom.create().then(function(ph) {
-        ph.createPage().then(function(page) {
-          console.log("Working on %s", data.link);
-          page.open(data.link, function(status) {
-              console.log("Status: " + status);
-              if(status === "success") {
-                //page.render('example.png');
-                var buffer = page.renderBuffer("png", -1);
-                s3.putObject({Bucket: myBucket, Key: "/non.png", Body: buffer}, function(err, data) {
-                  if (err) {
-                    console.log(err)
-                  } else {
-                    console.log("Successfully uploaded data to myBucket/myKey");
-                  }
-                });
-              }
-              phantom.exit();
-          });
-        });
-      });
+
+			execFile(phantomjs.path, [
+				path.join(__dirname, './phantomjs-script.js'),
+				data.link
+			], null, function (err, stdout, stderr) {
+				console.log("execFileSTDOUT:", JSON.stringify(stdout))
+				console.log("execFileSTDERR:", JSON.stringify(stderr))
+			})
+
+
+
+				//s3.putObject({Bucket: myBucket, Key: "/non.png", Body: stdout}, function(err, data) { if (stdout) {
+						//console.log(err)
+					//} else {
+						//console.log("Successfully uploaded data to myBucket/myKey");
+					//}
+				//});
 
     }, {noAck: true});
   });
