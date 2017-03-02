@@ -1,10 +1,8 @@
 var page = require('webpage').create();
-var url = 'http://phantomjs.org/';
-page.open(url, function (status) {
+page.open('http://loige.co', function(status) {
+  console.log("Status: " + status);
   if(status === "success") {
     page.render('example.png');
   }
-  echo "alaalal";
   phantom.exit();
-  exit 0
 });
