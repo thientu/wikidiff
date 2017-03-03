@@ -13,7 +13,7 @@ amqp.connect('amqp://rabbit', function(err, conn) {
   }
   conn.createChannel(function(err, ch) {
     var q = 'hello';
-    ch.assertQueue(q, {durable: false});
+    ch.assertQueue(q, {durable: true});
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C");
     ch.consume(q, function(msg) {
       var content = msg.content.toString();
@@ -37,6 +37,9 @@ amqp.connect('amqp://rabbit', function(err, conn) {
           }
         });
 			})
+      setTimeout(function() {
+        console.log(" [x] Done");
+      }, 5 * 1000);
     }, {noAck: true});
   });
 });

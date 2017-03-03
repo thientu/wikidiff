@@ -31,6 +31,6 @@ services:
             #delay: 5s
             #max_attempts: 3
             #window: 120s
-
 networks:
-    micro-net:
+  micro-net:
+    external: true
