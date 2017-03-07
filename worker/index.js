@@ -5,6 +5,10 @@ var s3 = new AWS.S3();
 var myBucket = 'gianarb.wikidiff.output';
 var path = require('path')
 
+process.on('SIGINT', function() {
+  process.exit();
+});
+
 var execFile = require("child_process").execFile
 
 amqp.connect('amqp://rabbit', function(err, conn) {

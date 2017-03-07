@@ -2,6 +2,10 @@ var PubNub = require('pubnub')
 var amqp = require('amqplib/callback_api');
 var channel;
 
+process.on('SIGINT', function() {
+  process.exit();
+});
+
 pubnub = new PubNub({
   //publishKey : 'pub-c-d207fff3-fceb-41a6-83de-bf99dc70ebbe',
   subscribeKey : 'sub-c-b0d14910-0601-11e4-b703-02ee2ddab7fe'
