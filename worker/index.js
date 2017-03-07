@@ -14,6 +14,7 @@ amqp.connect('amqp://rabbit', function(err, conn) {
   conn.createChannel(function(err, ch) {
     var q = 'hello';
     ch.assertQueue(q, {durable: true});
+    ch.prefetch(1);
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C");
     ch.consume(q, function(msg) {
       var content = msg.content.toString();
@@ -30,7 +31,8 @@ amqp.connect('amqp://rabbit', function(err, conn) {
           Key: "non.png",
           ContentType: "image/png",
           Body: buf
-        }, function(err, data) { if (stdout) {
+        }, function(err, data) {
+          if (stdout) {
             console.log("err s3 %s", err)
           } else {
             console.log("Successfully uploaded data to myBucket/myKey");
@@ -39,7 +41,8 @@ amqp.connect('amqp://rabbit', function(err, conn) {
 			})
       setTimeout(function() {
         console.log(" [x] Done");
+        ch.ack(msg);
       }, 5 * 1000);
-    }, {noAck: true});
+    }, {noAck: false});
   });
 });
