@@ -1,5 +1,6 @@
 var amqp = require('amqplib/callback_api');
-var phantomjs = require('phantomjs') var AWS = require('aws-sdk');
+var phantomjs = require('phantomjs');
+var AWS = require('aws-sdk');
 var credentialFilename = process.env.AWS_CREDENTIAL_FILENAME
 var crypto = require('crypto');
 if (credentialFilename == "") {
