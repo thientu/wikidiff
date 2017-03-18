@@ -12,7 +12,7 @@ services:
     networks:
       - int-net
   handler:
-    image: 80.247.66.205:5000/wkidiff/handler 
+    image: gianarb/wikidiff-handler
     depends_on:
       - rabbit
     deploy:
@@ -30,7 +30,7 @@ services:
     networks:
       - int-net
   worker:
-    image: 80.247.66.205:5000/wkidiff/worker
+    image: gianarb/wikidiff-worker
     secrets:
       - aws-credential
     depends_on:
