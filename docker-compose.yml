@@ -43,7 +43,7 @@ services:
         constraints:
           - engine.labels.kind == backend
       labels:
-        orbiter: true
+        orbiter: "true"
         orbiter_up: 3
         orbiter_down: 2
       resources:

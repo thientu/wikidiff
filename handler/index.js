@@ -1,4 +1,4 @@
-var PubNub = require('pubnub')
+var https = require('https');
 var amqp = require('amqplib/callback_api');
 var channel;
 
@@ -6,14 +6,12 @@ process.on('SIGINT', function() {
   process.exit();
 });
 
-pubnub = new PubNub({
-  //publishKey : 'pub-c-d207fff3-fceb-41a6-83de-bf99dc70ebbe',
-  subscribeKey : 'sub-c-b0d14910-0601-11e4-b703-02ee2ddab7fe'
-})
+var io = require( 'socket.io-client' );
+var socket = io.connect( 'https://stream.wikimedia.org/rc' );
 
-pubnub.subscribe({
-    channels: ['pubnub-wikipedia'],
-})
+socket.on('connect', function () {
+     socket.emit( 'subscribe', '*.wikidata.org' );
+});
 
 amqp.connect('amqp://rabbit', function(err, conn) {
   if (err) {
@@ -26,16 +24,11 @@ amqp.connect('amqp://rabbit', function(err, conn) {
   });
 });
 
-pubnub.addListener({
-    message: function(m) {
-			console.log(m);
-      channel.sendToQueue("hello", new Buffer(JSON.stringify({
-        "link": m.message.link
-      })), {persistent: true});
-      console.log(" [x] Sent 'Hello World!'");
-    },
-    status: function(s) {
-			console.log(s);
-    }
-})
-
+socket.on('change', function ( data ) {
+	if (data.type == "edit") {
+		link = data.server_url+data.server_script_path+"/index.php?diff="+data.revision['new']+"&oldid="+data.revision.old,
+		channel.sendToQueue("hello", new Buffer(JSON.stringify({
+			"link": link
+		})), {persistent: true});
+	}
+});
