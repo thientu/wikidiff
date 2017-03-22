@@ -17,8 +17,8 @@ services:
       - rabbit
     deploy:
       placement:
-        constraints:
-          - engine.labels.kind == backend
+        #constraints:
+          #- engine.labels.kind == backend
       replicas: 1
       resources:
           limits:
@@ -40,8 +40,8 @@ services:
     deploy:
       replicas: 1
       placement:
-        constraints:
-          - engine.labels.kind == backend
+        #constraints:
+          #- engine.labels.kind == backend
       labels:
         orbiter: "true"
         orbiter_up: 3
