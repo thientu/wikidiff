@@ -10,7 +10,7 @@ var credentials = new AWS.SharedIniFileCredentials({filename: credentialFilename
 var s3 = new AWS.S3({
   credentials: credentials
 });
-var myBucket = 'gianarb.wikidiff.output';
+var myBucket = process.env.bucket_name || 'gianarb.wikidiff.output';
 var path = require('path')
 
 process.on('SIGINT', function() {
