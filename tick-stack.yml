@@ -1,0 +1,40 @@
+version: "2"
+services:
+  influxdb:
+      image: influxdb:1.1.4
+      networks:
+          - tick
+      ports:
+          - "8086:8086"
+          - "8083:8083"
+  kapacitor:
+      image: kapacitor:1.1.1
+      volumes:
+          - ./kapacitor/conf.toml:/etc/kapacitor/kapacitor.conf
+          - ./kapacitor/tasks:/var/lib/kapacitor/tasks
+      networks:
+          - tick
+      environment:
+          - "KAPACITOR_HOSTNAME=kapacitor"
+      ports:
+          - "9092:9092"
+  chronograf:
+      image: quay.io/influxdb/chronograf
+      networks:
+          - tick
+      ports:
+          - "8888:8888"
+  orbiter:
+    image: gianarb/orbiter
+    ports:
+      - "8000:8000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - "DOCKER_HOST=unix:///var/run/docker.sock"
+    command: daemon -debug
+    networks:
+      - tick
+networks:
+    tick:
+        driver: bridge
