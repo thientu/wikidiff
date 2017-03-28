@@ -8,11 +8,16 @@ process.on('SIGINT', function() {
   process.exit();
 });
 
-var io = require('socket.io-client' );
-var socket = io.connect( 'https://stream.wikimedia.org/rc' );
+var io = require('socket.io-client');
+var socket = io.connect('https://stream.wikimedia.org/rc');
 
 socket.on('connect', function () {
-  socket.emit( 'subscribe', '*' );
+  console.log("Connected");
+  socket.emit('subscribe', 'commons.wikimedia.org');
+});
+
+socket.on('error', function (err) {
+  throw err;
 });
 
 amqp.connect('amqp://rabbit', function(err, conn) {

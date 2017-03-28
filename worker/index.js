@@ -1,3 +1,4 @@
+console.log("I am a new worker");
 var amqp = require('amqplib/callback_api');
 var phantomjs = require('phantomjs');
 var AWS = require('aws-sdk');
@@ -24,10 +25,14 @@ amqp.connect('amqp://rabbit', function(err, conn) {
     throw err;
   }
   conn.createChannel(function(err, ch) {
+    if (err) {
+      throw err;
+      process.exit();
+    }
     var q = 'hello';
     ch.assertQueue(q, {durable: true});
     ch.prefetch(1);
-    console.log(" [*] Waiting for messages in %s. To exit press CTRL+C");
+    console.log(" [*] Waiting for messages. To exit press CTRL+C");
     ch.consume(q, function(msg) {
       var content = msg.content.toString();
       console.log("Received %s", content);
@@ -47,6 +52,8 @@ amqp.connect('amqp://rabbit', function(err, conn) {
         }, function(err, data) {
           if (err) {
             console.log("err s3 %s", err)
+            throw err;
+            process.exit();
           } else {
             console.log("Successfully uploaded data to myBucket/myKey");
           }

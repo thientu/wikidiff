@@ -3,5 +3,8 @@
     "amqplib": "*",
     "socket.io-client": "0.9.1",
     "active-x-obfuscator": "0.0.2"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }

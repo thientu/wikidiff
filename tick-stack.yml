@@ -1,40 +1,44 @@
-version: "2"
+version: "3.1"
 services:
   influxdb:
       image: influxdb:1.1.4
       networks:
-          - tick
+          - int-net
       ports:
           - "8086:8086"
           - "8083:8083"
+      #environment:
+          #- INFLUXDB_HTTP_BIND_ADDRESS="0.0.0.0:8086"
   kapacitor:
       image: kapacitor:1.1.1
       volumes:
           - ./kapacitor/conf.toml:/etc/kapacitor/kapacitor.conf
           - ./kapacitor/tasks:/var/lib/kapacitor/tasks
       networks:
-          - tick
+          - int-net
       environment:
           - "KAPACITOR_HOSTNAME=kapacitor"
       ports:
           - "9092:9092"
   chronograf:
       image: quay.io/influxdb/chronograf
+      environment:
+          - INFLUXDB_HTTP_BIND_ADDRESS="0.0.0.0:8086"
       networks:
-          - tick
+          - int-net
       ports:
           - "8888:8888"
-  orbiter:
-    image: gianarb/orbiter
-    ports:
-      - "8000:8000"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    environment:
-      - "DOCKER_HOST=unix:///var/run/docker.sock"
-    command: daemon -debug
-    networks:
-      - tick
+  #orbiter:
+    #image: gianarb/orbiter
+    #ports:
+      #- "8000:8000"
+    #volumes:
+      #- "/var/run/docker.sock:/var/run/docker.sock"
+    #environment:
+      #- "DOCKER_HOST=unix:///var/run/docker.sock"
+    #command: daemon -debug
+    #networks:
+      #- tick
 networks:
-    tick:
-        driver: bridge
+  int-net:
+    external: true
