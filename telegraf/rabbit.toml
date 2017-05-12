@@ -1,0 +1,53 @@
+# Optional
+[global_tags]
+  # user = "$USER"
+
+[agent]
+  interval = "10s"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  precision = ""
+  debug = false
+  quiet = false
+  hostname = ""
+  omit_hostname = false
+
+[[outputs.influxdb]]
+  # Point at InfluxDB here. Were you planning on using a cloud cluster?
+  urls = ["https://toodarnloud-7dbd1a36.influxcloud.net:8086"] # required
+  database = "telegraf" # required
+  retention_policy = ""
+  write_consistency = "any"
+  timeout = "5s"
+  ## Optional auth settings
+  username = "gianluca"
+  password = "dockerswarm"
+  user_agent = "telegraf"
+
+[[inputs.cpu]]
+  percpu = true
+  totalcpu = true
+  collect_cpu_time = false
+  
+[[inputs.disk]]
+  ignore_fs = ["tmpfs", "devtmpfs"]
+
+[[inputs.docker]]
+  # set this to poll the docker api on each machine
+  endpoint = "unix:///var/run/docker.sock"
+  container_names = []
+  timeout = "5s"
+  perdevice = true
+  total = false
+  
+[[inputs.mem]]
+[[inputs.system]]
+
+[[inputs.rabbitmq]]
+  url = "http://rabbit:15672"
+  username = "guest"
+  password = "guest"

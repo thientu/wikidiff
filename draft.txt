@@ -1,0 +1,1 @@
+curl -v -X POST http://54.171.93.124:8000/handle/autodetect_swarm/wiki_worker/up

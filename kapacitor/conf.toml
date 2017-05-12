@@ -1,8 +1,8 @@
-hostname = "localhost"
+hostname = "54.171.93.124"
 data_dir = "/var/lib/kapacitor"
 
 [http]
-  bind-address = "0.0.0.0:9092"
+  bind-address = ":9092"
   auth-enabled = false
   log-enabled = true
   write-tracing = false
@@ -25,7 +25,7 @@ data_dir = "/var/lib/kapacitor"
   enabled = true
   name = "influxdb"
   default = true
-  urls = ["http://influxdb:8086"]
+  urls = ["http://54.171.93.124:8086"]
   username = ""
   password = ""
   ssl-ca = ""

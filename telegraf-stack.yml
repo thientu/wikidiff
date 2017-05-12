@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+  telegraf-rabbit:
+    image: gianarb/telegraf_rabbit
+    deploy:
+      mode: global
+    networks:
+      - int-net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/cpuinfo:/proc/cpuinfo:ro
+      - /proc/meminfo:/proc/meminfo:ro
+      - /sys:/sys:ro
+      - /var/run/utmp:/var/run/utmp:ro
+networks:
+    int-net:
+      external: true
